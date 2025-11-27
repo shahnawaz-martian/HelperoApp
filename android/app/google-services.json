@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "640482644974",
+    "project_id": "helpero-44ea9",
+    "storage_bucket": "helpero-44ea9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640482644974:android:516c653fcf8754192a34ff",
+        "android_client_info": {
+          "package_name": "com.example.helpero"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVMXyxEQMyCfB5mv_EkNmhz_Rjj5qH6gw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
