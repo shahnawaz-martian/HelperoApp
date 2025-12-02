@@ -81,13 +81,16 @@ class _CreateOrderState extends State<CreateOrder> {
               ),
             ),
             SizedBox(width: 0.5.w),
-            Text(
-              selectedAddressInAppBar != null
-                  ? '${selectedAddressInAppBar!.blockNo ?? ''} ${selectedAddressInAppBar!.addressLine1 ?? ''}'
-                  : '',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w600),
+            Expanded(
+              child: Text(
+                selectedAddressInAppBar != null
+                    ? '${selectedAddressInAppBar!.blockNo ?? ''} ${selectedAddressInAppBar!.addressLine1 ?? ''}'
+                    : '',
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w600),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

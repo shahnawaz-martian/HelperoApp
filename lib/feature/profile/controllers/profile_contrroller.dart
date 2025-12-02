@@ -29,6 +29,12 @@ class ProfileController extends ChangeNotifier {
   ProfileModel? get userInfoModel => _userInfoModel;
 
   bool get isLoading => _isLoading;
+  Addresses? selectedAddress;
+
+  void setSelectedAddress(Addresses address) {
+    selectedAddress = address;
+    notifyListeners();
+  }
 
   Future<void> getUserInfo(BuildContext context, String userId) async {
     var cacheKey = "${AppConstants.getProfileUri}/$userId";

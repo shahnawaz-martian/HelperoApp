@@ -115,194 +115,185 @@ class _BookingDetailsState extends State<BookingDetails> {
             return Column(
               children: [
                 Expanded(
-                  child: Padding(
+                  child: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(
                       horizontal: 4.w,
                       vertical: 1.h,
                     ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    height: 12.h,
-                                    width: 25.w,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 3.w,
-                                      vertical: 2.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(
-                                        context,
-                                      ).scaffoldBackgroundColor,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: Image.asset(
-                                      'assets/images/logo.png',
-                                      fit: BoxFit.contain,
-                                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  height: 12.h,
+                                  width: 25.w,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 3.w,
+                                    vertical: 2.h,
                                   ),
-                                  if (orderDetail.orderType != "ONETIME")
-                                    Positioned(
-                                      top: -6,
-                                      right: -6,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          borderRadius: BorderRadius.circular(
-                                            12,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(
+                                      context,
+                                    ).scaffoldBackgroundColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Image.asset(
+                                    'assets/images/logo.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                if (orderDetail.orderType != "ONETIME")
+                                  Positioned(
+                                    top: -6,
+                                    right: -6,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black26,
+                                            blurRadius: 3,
+                                            offset: Offset(0, 2),
                                           ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black26,
-                                              blurRadius: 3,
-                                              offset: Offset(0, 2),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        (orderDetail.orderType ?? '')
+                                            .toUpperCase(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall
+                                            ?.copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onPrimary,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                          ],
-                                        ),
-                                        child: Text(
-                                          (orderDetail.orderType ?? '')
-                                              .toUpperCase(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelSmall
-                                              ?.copyWith(
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.onPrimary,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
                                       ),
                                     ),
-                                ],
-                              ),
-                              SizedBox(width: 2.5.w),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    orderDetail.service ?? '',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                    maxLines: 1,
                                   ),
-                                  SizedBox(height: 0.4.h),
-                                  if (orderDetail.orderType != "ONETIME") ...[
-                                    _buildRow(
-                                      "Start Date: ",
-                                      orderDetail.startDate,
-                                      context,
-                                    ),
-                                    SizedBox(height: 0.4.h),
-                                    _buildRow(
-                                      "End Date: ",
-                                      orderDetail.endDate,
-                                      context,
-                                    ),
-                                  ],
-                                  if (orderDetail.orderType == "ONETIME") ...[
-                                    _buildRow(
-                                      "Date: ",
-                                      orderDetail.date,
-                                      context,
-                                    ),
-                                  ],
-                                  SizedBox(height: 0.4.h),
-                                  _buildRow(
-                                    "Start Time: ",
-                                    orderDetail.startTime,
-                                    context,
-                                  ),
-                                  SizedBox(height: 0.4.h),
-                                  _buildRow(
-                                    "Duration: ",
-                                    orderDetail.duration,
-                                    context,
-                                  ),
-                                  SizedBox(height: 1.h),
-                                  Text(
-                                    "₹ ${(orderDetail.amount ?? 0).toStringAsFixed(2)}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          if (orderDetail.helperDetails != null) ...[
-                            SizedBox(height: 2.h),
-                            Text(
-                              "About Service Provider",
-                              style: Theme.of(context).textTheme.labelLarge
-                                  ?.copyWith(fontWeight: FontWeight.w600),
+                              ],
                             ),
-                            SizedBox(height: 1.5.h),
-                            ProfileCard(
-                              profile: orderDetail.helperDetails!,
-                              firstname:
-                                  orderDetail.helperDetails?.firstName ?? '',
-                              lastname:
-                                  orderDetail.helperDetails?.lastName ?? '',
-                              phoneNo: orderDetail.helperDetails?.phoneNo ?? '',
+                            SizedBox(width: 2.5.w),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  orderDetail.service ?? '',
+                                  style: Theme.of(context).textTheme.labelLarge
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                  maxLines: 1,
+                                ),
+                                SizedBox(height: 0.4.h),
+                                if (orderDetail.orderType != "ONETIME") ...[
+                                  _buildRow(
+                                    "Start Date: ",
+                                    orderDetail.startDate,
+                                    context,
+                                  ),
+                                  SizedBox(height: 0.4.h),
+                                  _buildRow(
+                                    "End Date: ",
+                                    orderDetail.endDate,
+                                    context,
+                                  ),
+                                ],
+                                if (orderDetail.orderType == "ONETIME") ...[
+                                  _buildRow(
+                                    "Date: ",
+                                    orderDetail.date,
+                                    context,
+                                  ),
+                                ],
+                                SizedBox(height: 0.4.h),
+                                _buildRow(
+                                  "Start Time: ",
+                                  orderDetail.startTime,
+                                  context,
+                                ),
+                                SizedBox(height: 0.4.h),
+                                _buildRow(
+                                  "Duration: ",
+                                  orderDetail.duration,
+                                  context,
+                                ),
+                                SizedBox(height: 1.h),
+                                Text(
+                                  "₹ ${(orderDetail.amount ?? 0).toStringAsFixed(2)}",
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(fontWeight: FontWeight.w600),
+                                ),
+                              ],
                             ),
                           ],
+                        ),
+                        if (orderDetail.helperDetails != null) ...[
                           SizedBox(height: 2.h),
                           Text(
-                            "Service Address",
+                            "About Service Provider",
                             style: Theme.of(context).textTheme.labelLarge
                                 ?.copyWith(fontWeight: FontWeight.w600),
                           ),
                           SizedBox(height: 1.5.h),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: Theme.of(context).highlightColor,
-                                width: 1,
-                              ),
-                            ),
-                            child: Text(
-                              "${orderDetail.blockNo ?? ''} "
-                              "${orderDetail.addressLine1 ?? ''} "
-                              "${orderDetail.addressLine2 ?? ''} "
-                              "${orderDetail.city ?? ''} "
-                              "${orderDetail.pincode ?? ''}",
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
+                          ProfileCard(
+                            profile: orderDetail.helperDetails!,
+                            firstname:
+                                orderDetail.helperDetails?.firstName ?? '',
+                            lastname: orderDetail.helperDetails?.lastName ?? '',
+                            phoneNo: orderDetail.helperDetails?.phoneNo ?? '',
                           ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            "Booking Status",
-                            style: Theme.of(context).textTheme.labelLarge
-                                ?.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(height: 1.5.h),
-                          BookingStatusWidget(),
                         ],
-                      ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          "Service Address",
+                          style: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(height: 1.5.h),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Theme.of(context).highlightColor,
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            "${orderDetail.blockNo ?? ''} "
+                            "${orderDetail.addressLine1 ?? ''} "
+                            "${orderDetail.addressLine2 ?? ''} "
+                            "${orderDetail.city ?? ''} "
+                            "${orderDetail.pincode ?? ''}",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          "Booking Status",
+                          style: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(height: 1.5.h),
+                        BookingStatusWidget(),
+                      ],
                     ),
                   ),
                 ),

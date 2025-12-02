@@ -60,10 +60,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   }
 
   Future<void> _refreshFeeds() async {
-    await Provider.of<OrderController>(context, listen: false).getOrderList(
-      Provider.of<AuthController>(context, listen: false).userId,
-      isRefresh: true,
-    );
+    final orderController = context.read<OrderController>();
+    final authController = context.read<AuthController>();
+    await orderController.getOrderList(authController.userId, isRefresh: true);
   }
 
   @override
@@ -121,6 +120,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         return ListView.builder(
           controller: _scrollController,
           itemCount: orderList.length + (provider.hasMore ? 1 : 0),
+          physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             if (index < orderList.length) {
               final order = orderList[index];

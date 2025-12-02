@@ -40,7 +40,7 @@ class _SelectAddressBottomSheetState extends State<SelectAddressBottomSheet> {
     return Consumer<ProfileController>(
       builder: (context, profile, child) {
         final addresses = profile.userInfoModel?.addresses ?? [];
-        selectedAddress = addresses!.first;
+        profile.selectedAddress = addresses!.first;
         return Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -90,8 +90,8 @@ class _SelectAddressBottomSheetState extends State<SelectAddressBottomSheet> {
                           onChanged: (value) {
                             setState(() {
                               selectedAddress = value; // update selected
+                              profile.setSelectedAddress(value!);
                             });
-
                             Navigator.pop(context, value); // return selected
                           },
 

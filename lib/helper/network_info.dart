@@ -66,38 +66,72 @@ class NetworkInfo {
   NetworkInfo(this.connectivity);
 
   Future<bool> get isConnected async {
-    ConnectivityResult result = await connectivity.checkConnectivity();
-    return result != ConnectivityResult.none;
+    final results = await connectivity.checkConnectivity();
+    return !results.contains(ConnectivityResult.none);
   }
 
   static void checkConnectivity(BuildContext context) {
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if (Provider.of<AuthController>(
-        Get.context!,
-        listen: false,
-      ).firstTimeConnectionCheck) {
-        Provider.of<AuthController>(
-          Get.context!,
-          listen: false,
-        ).setFirstTimeConnectionCheck(false);
-      } else {
-        bool isNotConnected = result == ConnectivityResult.none;
-        isNotConnected
-            ? const SizedBox()
-            : ScaffoldMessenger.of(Get.context!).hideCurrentSnackBar();
-        ScaffoldMessenger.of(Get.context!).showSnackBar(
-          SnackBar(
-            backgroundColor: isNotConnected ? Colors.red : Colors.green,
-            duration: Duration(seconds: isNotConnected ? 6000 : 3),
-            content: Text(
-              isNotConnected
-                  ? "Check your internet connection"
-                  : "Connected to the Internet",
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
+    final authController = Provider.of<AuthController>(context, listen: false);
+
+    Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> results,
+    ) {
+      if (authController.firstTimeConnectionCheck) {
+        authController.setFirstTimeConnectionCheck(false);
+        return;
       }
+
+      bool isNotConnected = results.contains(ConnectivityResult.none);
+
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: isNotConnected ? Colors.red : Colors.green,
+          duration: Duration(seconds: isNotConnected ? 6000 : 3),
+          content: Text(
+            isNotConnected
+                ? "Check your internet connection"
+                : "Connected to the Internet",
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
     });
   }
+
+  // Future<bool> get isConnected async {
+  //   ConnectivityResult result = await connectivity.checkConnectivity();
+  //   return result != ConnectivityResult.none;
+  // }
+
+  // static void checkConnectivity(BuildContext context) {
+  //   Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+  //     if (Provider.of<AuthController>(
+  //       Get.context!,
+  //       listen: false,
+  //     ).firstTimeConnectionCheck) {
+  //       Provider.of<AuthController>(
+  //         Get.context!,
+  //         listen: false,
+  //       ).setFirstTimeConnectionCheck(false);
+  //     } else {
+  //       bool isNotConnected = result == ConnectivityResult.none;
+  //       isNotConnected
+  //           ? const SizedBox()
+  //           : ScaffoldMessenger.of(Get.context!).hideCurrentSnackBar();
+  //       ScaffoldMessenger.of(Get.context!).showSnackBar(
+  //         SnackBar(
+  //           backgroundColor: isNotConnected ? Colors.red : Colors.green,
+  //           duration: Duration(seconds: isNotConnected ? 6000 : 3),
+  //           content: Text(
+  //             isNotConnected
+  //                 ? "Check your internet connection"
+  //                 : "Connected to the Internet",
+  //             textAlign: TextAlign.center,
+  //           ),
+  //         ),
+  //       );
+  //     }
+  //   });
+  // }
 }
