@@ -286,6 +286,25 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(height: 2.h),
+                        if (orderDetail.comment != null &&
+                            orderDetail.comment!.isNotEmpty) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Special Instructions",
+                                style: Theme.of(context).textTheme.labelLarge
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                              Text(
+                                "${orderDetail.comment}",
+                                style: Theme.of(context).textTheme.labelLarge
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 2.h),
+                        ],
                         Text(
                           "Booking Status",
                           style: Theme.of(context).textTheme.labelLarge

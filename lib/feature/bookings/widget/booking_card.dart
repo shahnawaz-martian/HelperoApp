@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:helpero/feature/bookings/domain/models/order_model.dart';
 import 'package:sizer/sizer.dart';
@@ -123,7 +125,10 @@ class BookingCard extends StatelessWidget {
           if (booking.amount != null &&
               booking.status?.toUpperCase() != "CANCELLED") ...[
             SizedBox(height: 0.7.h),
-            Divider(color: Theme.of(context).colorScheme.outline),
+            Divider(
+              color: Theme.of(context).colorScheme.outline,
+              thickness: 0.75,
+            ),
             SizedBox(height: 0.5.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,8 +149,8 @@ class BookingCard extends StatelessWidget {
                     SizedBox(width: 2.5.w),
                     Text(
                       booking.paymentStatus?.toUpperCase() == "UNPAID"
-                          ? "Amount To Pay ₹${(booking.amount ?? 0).toInt()}"
-                          : "Amount Paid ₹${booking.amount?.toInt() ?? 0}",
+                          ? "Amount To Pay ₹ ${(booking.amount ?? 0).round().toInt()}"
+                          : "Amount Paid ₹ ${booking.amount?.round().toInt() ?? 0}",
 
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),

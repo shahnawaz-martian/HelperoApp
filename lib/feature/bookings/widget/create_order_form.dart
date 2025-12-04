@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:helpero/feature/auth/controllers/auth_controller.dart';
 import 'package:helpero/feature/bookings/widget/select_address_bottomSheet.dart';
@@ -212,8 +214,8 @@ class _CreateOrderFormState extends State<CreateOrderForm> {
                     SizedBox(height: 2.h),
                     CustomTextField(
                       controller: instructionController,
-                      label: "Special Instruction",
-                      hintText: "Special Instruction",
+                      label: "Any Special Instructions?",
+                      hintText: "Special Instructions",
                       prefixIcon: Icon(
                         Icons.insert_comment_outlined,
                         color: Theme.of(context).colorScheme.primary,
@@ -302,47 +304,59 @@ class _CreateOrderFormState extends State<CreateOrderForm> {
                       ),
                     ),
                     SizedBox(height: 2.h),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Theme.of(context).highlightColor,
-                          width: 1,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Charges Summary: ",
-                            style: Theme.of(context).textTheme.titleSmall
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.8,
-                                ),
-                          ),
-                          SizedBox(height: 1.5.h),
-                          _row(
-                            "Service Charge",
-                            "₹ ${finalServiceCharge.toStringAsFixed(2)}",
-                            context,
-                          ),
-                          SizedBox(height: 1.h),
-                          _row(
-                            "Transportation Charge",
-                            "₹ ${finalTransportCharge.toStringAsFixed(2)}",
-                            context,
-                          ),
-                          SizedBox(height: 1.h),
-                          _row(
-                            "Total Charge",
-                            "₹ ${finalTotalCharge.toStringAsFixed(2)}",
-                            context,
-                          ),
-                        ],
-                      ),
-                    ),
+                    finalTotalCharge != 0
+                        ? Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Theme.of(context).highlightColor,
+                                width: 1,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                finalServiceCharge != 0
+                                    ? Text(
+                                        "Charges Summary: ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 0.8,
+                                            ),
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: 1.5.h),
+                                finalServiceCharge != 0
+                                    ? _row(
+                                        "Service Charge",
+                                        "₹ ${finalServiceCharge.toStringAsFixed(2)}",
+                                        context,
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: 1.h),
+                                finalTransportCharge != 0
+                                    ? _row(
+                                        "Transportation Charge",
+                                        "₹ ${finalTransportCharge.toStringAsFixed(2)}",
+                                        context,
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: 1.h),
+                                finalTotalCharge != 0
+                                    ? _row(
+                                        "Total Charge",
+                                        "₹ ${finalTotalCharge.toStringAsFixed(2)}",
+                                        context,
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
                     SizedBox(height: 2.5.h),
                     Consumer<OrderController>(
                       builder: (context, orderController, _) {
@@ -367,9 +381,15 @@ class _CreateOrderFormState extends State<CreateOrderForm> {
                                         "Please select duration",
                                         context,
                                       );
+                                    } else if (widget.isSubscription &&
+                                        selectedStartDate == null) {
+                                      showCustomSnackBar(
+                                        "Please select start date and end date",
+                                        context,
+                                      );
                                     } else if (selectedStartTime == null) {
                                       showCustomSnackBar(
-                                        "Please select start time",
+                                        "Please select start time and slot", //"Please select start time"
                                         context,
                                       );
                                     } else if (addresses == null ||

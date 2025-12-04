@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:helpero/feature/bookings/controllers/order_controller.dart';
 import 'package:helpero/feature/profile/controllers/address_controller.dart';
 import 'package:helpero/feature/profile/controllers/profile_contrroller.dart';
@@ -21,6 +22,10 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final database = AppDatabase();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown, // optional (allows upside-down)
+  ]);
   await di.init();
 
   // Default initialization for all platforms

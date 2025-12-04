@@ -25,7 +25,7 @@ class PaymentSummaryWidget extends StatelessWidget {
           context,
         ),
         SizedBox(height: 1.h),
-        Divider(color: Theme.of(context).colorScheme.outline),
+        Divider(color: Theme.of(context).colorScheme.outline, thickness: 0.75),
         SizedBox(height: 1.h),
         _row('Total Payable Amount', amount.toStringAsFixed(2), context),
       ],
@@ -45,7 +45,7 @@ class PaymentSummaryWidget extends StatelessWidget {
           ),
         ),
         Text(
-          amount,
+          "₹ $amount", //\u20B9
           style: Theme.of(
             context,
           ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w600),

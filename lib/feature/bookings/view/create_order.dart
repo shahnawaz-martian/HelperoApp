@@ -86,10 +86,11 @@ class _CreateOrderState extends State<CreateOrder> {
                 selectedAddressInAppBar != null
                     ? '${selectedAddressInAppBar!.blockNo ?? ''} ${selectedAddressInAppBar!.addressLine1 ?? ''}'
                     : '',
-                style: Theme.of(
-                  context,
-                ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
                 overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
             ),
           ],
