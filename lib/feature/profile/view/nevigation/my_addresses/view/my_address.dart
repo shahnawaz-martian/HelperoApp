@@ -48,244 +48,254 @@ class _MyAddressesState extends State<MyAddresses> {
         builder: (context, profileController, child) {
           final addresses = profileController.userInfoModel?.addresses ?? [];
 
-          return SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: addresses.isEmpty
-                  ? Center(
-                      child: Text(
-                        "No addresses found",
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: addresses.length,
-                      itemBuilder: (context, index) {
-                        final address = addresses[index];
+          return RefreshIndicator(
+            onRefresh: () async {
+              // Fetch updated addresses
+              await profileController.getUserInfo(
+                context,
+                Provider.of<AuthController>(context, listen: false).getUserId(),
+              );
+            },
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: addresses.isEmpty
+                    ? Center(
+                        child: Text(
+                          "No addresses found",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: addresses.length,
+                        itemBuilder: (context, index) {
+                          final address = addresses[index];
 
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 2.h),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 1,
+                          return Container(
+                            margin: EdgeInsets.only(bottom: 2.h),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on_outlined,
-                                    size: 25,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (address.addressType != null &&
-                                            address.addressType!.isNotEmpty)
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on_outlined,
+                                      size: 25,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                                    SizedBox(width: 2.w),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (address.addressType != null &&
+                                              address.addressType!.isNotEmpty)
+                                            Text(
+                                              address.addressType ?? '',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelMedium
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                            ),
+                                          SizedBox(height: 0.5.h),
                                           Text(
-                                            address.addressType ?? '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.w600,
+                                            "${address.blockNo != null && address.blockNo!.isNotEmpty ? "${address.blockNo} " : ''}${address.addressLine1 ?? '-'} ${address.addressLine2 ?? ''}",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                Divider(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+
+                                SizedBox(height: 1.h),
+                                buildRow(
+                                  Icons.location_city_sharp,
+                                  address.city ?? 'N/A',
+                                ),
+                                SizedBox(height: 0.7.h),
+                                buildRow(
+                                  Icons.account_tree_outlined,
+                                  address.state ?? 'N/A',
+                                ),
+                                SizedBox(height: 0.7.h),
+                                buildRow(
+                                  Icons.pin_drop_outlined,
+                                  address.pinCode ?? 'N/A',
+                                ),
+
+                                Divider(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => SearchAddress(
+                                              lastSelectedAddress: address,
+                                              index: index,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.edit_outlined,
+                                            size: 15,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface,
+                                          ),
+                                          SizedBox(width: 2.w),
+                                          Text(
+                                            "Edit",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    SizedBox(width: 20.w),
+
+                                    InkWell(
+                                      onTap: () async {
+                                        deletingMap[index] = true;
+                                        setState(() {});
+
+                                        List<Addresses> updatedAddresses =
+                                            List.from(addresses);
+                                        updatedAddresses.removeAt(index);
+
+                                        final payload = {
+                                          "user_id":
+                                              Provider.of<AuthController>(
+                                                context,
+                                                listen: false,
+                                              ).getUserId(),
+                                          "contact_no":
+                                              profileController
+                                                  .userInfoModel
+                                                  ?.contactNo ??
+                                              '',
+                                          "addresses": updatedAddresses
+                                              .map((e) => e.toJson())
+                                              .toList(),
+                                        };
+
+                                        final response = await profileController
+                                            .updateUserAddress(payload);
+
+                                        deletingMap[index] = false;
+                                        setState(() {});
+
+                                        if (response.isSuccess) {
+                                          showCustomSnackBar(
+                                            "Address deleted successfully!",
+                                            Get.context!,
+                                            isError: false,
+                                          );
+
+                                          profileController
+                                                  .userInfoModel
+                                                  ?.addresses =
+                                              updatedAddresses;
+
+                                          print(
+                                            "addresses here ${profileController.userInfoModel?.addresses}",
+                                          );
+                                          profileController.notifyListeners();
+                                        } else {
+                                          showCustomSnackBar(
+                                            "Failed to delete address",
+                                            Get.context!,
+                                          );
+                                        }
+                                      },
+                                      child: deletingMap[index] == true
+                                          ? Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 12,
+                                                  height: 12,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        color: Theme.of(
+                                                          context,
+                                                        ).colorScheme.error,
+                                                      ),
                                                 ),
-                                          ),
-                                        SizedBox(height: 0.5.h),
-                                        Text(
-                                          "${address.blockNo != null && address.blockNo!.isNotEmpty ? "${address.blockNo} " : ''}${address.addressLine1 ?? '-'} ${address.addressLine2 ?? ''}",
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.bodySmall,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              Divider(
-                                color: Theme.of(context).colorScheme.outline,
-                              ),
-
-                              SizedBox(height: 1.h),
-                              buildRow(
-                                Icons.location_city_sharp,
-                                address.city ?? 'N/A',
-                              ),
-                              SizedBox(height: 0.7.h),
-                              buildRow(
-                                Icons.account_tree_outlined,
-                                address.state ?? 'N/A',
-                              ),
-                              SizedBox(height: 0.7.h),
-                              buildRow(
-                                Icons.pin_drop_outlined,
-                                address.pinCode ?? 'N/A',
-                              ),
-
-                              Divider(
-                                color: Theme.of(context).colorScheme.outline,
-                              ),
-
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => SearchAddress(
-                                            lastSelectedAddress: address,
-                                            index: index,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.edit_outlined,
-                                          size: 15,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onSurface,
-                                        ),
-                                        SizedBox(width: 2.w),
-                                        Text(
-                                          "Edit",
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.bodySmall,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  SizedBox(width: 20.w),
-
-                                  InkWell(
-                                    onTap: () async {
-                                      deletingMap[index] = true;
-                                      setState(() {});
-
-                                      List<Addresses> updatedAddresses =
-                                          List.from(addresses);
-                                      updatedAddresses.removeAt(index);
-
-                                      final payload = {
-                                        "user_id": Provider.of<AuthController>(
-                                          context,
-                                          listen: false,
-                                        ).getUserId(),
-                                        "contact_no":
-                                            profileController
-                                                .userInfoModel
-                                                ?.contactNo ??
-                                            '',
-                                        "addresses": updatedAddresses
-                                            .map((e) => e.toJson())
-                                            .toList(),
-                                      };
-
-                                      final response = await profileController
-                                          .updateUserAddress(payload);
-
-                                      deletingMap[index] = false;
-                                      setState(() {});
-
-                                      if (response.isSuccess) {
-                                        showCustomSnackBar(
-                                          "Address deleted successfully!",
-                                          Get.context!,
-                                          isError: false,
-                                        );
-
-                                        profileController
-                                                .userInfoModel
-                                                ?.addresses =
-                                            updatedAddresses;
-
-                                        print(
-                                          "addresses here ${profileController.userInfoModel?.addresses}",
-                                        );
-                                        profileController.notifyListeners();
-                                      } else {
-                                        showCustomSnackBar(
-                                          "Failed to delete address",
-                                          Get.context!,
-                                        );
-                                      }
-                                    },
-                                    child: deletingMap[index] == true
-                                        ? Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 12,
-                                                height: 12,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                      color: Theme.of(
-                                                        context,
-                                                      ).colorScheme.error,
-                                                    ),
-                                              ),
-                                              SizedBox(width: 6),
-                                              Text(
-                                                "Deleting...",
-                                                style: TextStyle(
+                                                SizedBox(width: 6),
+                                                Text(
+                                                  "Deleting...",
+                                                  style: TextStyle(
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).colorScheme.error,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.delete_outlined,
+                                                  size: 15,
                                                   color: Theme.of(
                                                     context,
                                                   ).colorScheme.error,
-                                                  fontSize: 12,
                                                 ),
-                                              ),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              Icon(
-                                                Icons.delete_outlined,
-                                                size: 15,
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.error,
-                                              ),
-                                              SizedBox(width: 2.w),
-                                              Text(
-                                                "Delete",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall
-                                                    ?.copyWith(
-                                                      color: Theme.of(
-                                                        context,
-                                                      ).colorScheme.error,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                                                SizedBox(width: 2.w),
+                                                Text(
+                                                  "Delete",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color: Theme.of(
+                                                          context,
+                                                        ).colorScheme.error,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+              ),
             ),
           );
         },

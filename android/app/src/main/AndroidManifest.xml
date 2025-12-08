@@ -20,7 +20,7 @@
         android:label="Helpero"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <service
             android:name="com.google.firebase.messaging.FirebaseMessagingService"
             android:exported="false">

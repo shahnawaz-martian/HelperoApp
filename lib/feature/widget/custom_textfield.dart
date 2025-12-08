@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -14,6 +15,7 @@ class CustomTextField extends StatelessWidget {
   final void Function()? onTap;
   final TextDirection? textDirection;
   final ValueChanged<String>? onChanged;
+  final List<TextInputFormatter>? inputFormatters;
   final bool required; // Added onChanged parameter
 
   const CustomTextField({
@@ -31,6 +33,7 @@ class CustomTextField extends StatelessWidget {
     this.textDirection,
     this.onChanged,
     this.required = false,
+    this.inputFormatters,
     this.prefixIcon, // Added to constructor
   });
 
@@ -101,6 +104,7 @@ class CustomTextField extends StatelessWidget {
           ),
           validator: validator,
           autovalidateMode: AutovalidateMode.onUserInteraction,
+          inputFormatters: inputFormatters,
         ),
       ],
     );

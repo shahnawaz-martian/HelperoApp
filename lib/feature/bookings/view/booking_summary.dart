@@ -131,9 +131,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                             height: 10.h,
                             width: 25.w,
                             decoration: BoxDecoration(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary.withOpacity(0.2),
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             clipBehavior: Clip.antiAlias,

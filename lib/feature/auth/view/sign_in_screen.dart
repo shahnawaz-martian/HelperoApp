@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:helpero/base_widget/show_custom_snakbar_widget.dart';
 import 'package:helpero/feature/auth/controllers/auth_controller.dart';
 import 'package:helpero/feature/widget/custom_textfield.dart';
@@ -71,7 +72,15 @@ class _SignInScreenState extends State<SignInScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 20.h),
-              Image.asset('assets/images/logo.png', width: 40.w, height: 17.h),
+              Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(2.h),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: 40.w,
+                  height: 17.h,
+                ),
+              ),
               SizedBox(height: 3.h),
               Consumer<AuthController>(
                 builder: (context, authController, child) {
@@ -131,6 +140,10 @@ class _SignInScreenState extends State<SignInScreen> {
                           keyboardType: TextInputType.phone,
                           validator: (value) =>
                               ValidateCheck.validatePhoneNumber(value),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(10),
+                          ],
                         ),
                         widget.isFromOtpVerification
                             ? SizedBox(height: 2.h)

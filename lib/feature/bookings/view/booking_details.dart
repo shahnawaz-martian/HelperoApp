@@ -136,9 +136,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     vertical: 2.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(
-                                      context,
-                                    ).scaffoldBackgroundColor,
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   clipBehavior: Clip.antiAlias,

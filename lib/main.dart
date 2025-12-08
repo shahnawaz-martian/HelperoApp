@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,21 @@ import 'helper/notification_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final database = AppDatabase();
+
+// Custom PageTransitionsBuilder with no animation
+class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return child;
+  }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
@@ -81,7 +98,7 @@ class _MyAppState extends State<MyApp> {
     // Ask notification permission first
     await NotificationService.requestPermission();
     await NotificationService.getDeviceToken().then((value) {
-      print(value);
+      log("FCM Token: $value");
     });
 
     // Delay to allow Android UI to settle
@@ -104,7 +121,14 @@ class _MyAppState extends State<MyApp> {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Helpero',
-              theme: lightTheme,
+              theme: lightTheme.copyWith(
+                pageTransitionsTheme: PageTransitionsTheme(
+                  builders: {
+                    TargetPlatform.android: NoAnimationPageTransitionsBuilder(),
+                    TargetPlatform.iOS: NoAnimationPageTransitionsBuilder(),
+                  },
+                ),
+              ),
               themeMode: ThemeMode.light,
               home: isLoggedIn
                   ? const BottomNavigationBarScreen()
